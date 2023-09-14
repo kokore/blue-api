@@ -19,6 +19,7 @@ type Repo interface {
 	InsertOne(ctx context.Context, f Filter) error
 	Find(ctx context.Context) ([]Product, error)
 	FindAndUpdate(ctx context.Context, productId primitive.ObjectID, u Update) (*Product, error)
+	DeleteOneById(ctx context.Context, productId primitive.ObjectID) error
 }
 
 func InitUserRepository(connection database.Connection) Repo {
@@ -30,7 +31,6 @@ func (r repoImpl) InsertOne(ctx context.Context, filter Filter) error {
 	if err != nil {
 		return errorinternal.NewError(errorinternal.ErrorCodeProductCantInsert, "can't insert product")
 	}
-
 	return nil
 }
 
@@ -49,7 +49,6 @@ func (r repoImpl) Find(ctx context.Context) ([]Product, error) {
 		}
 		products = append(products, product)
 	}
-
 	return products, nil
 }
 
@@ -63,11 +62,19 @@ func (r repoImpl) FindAndUpdate(ctx context.Context, productId primitive.ObjectI
 		}
 		return nil, result.Err()
 	}
-
 	var product Product
 	err := result.Decode(&product)
 	if err != nil {
 		return nil, err
 	}
 	return &product, nil
+}
+
+func (r repoImpl) DeleteOneById(ctx context.Context, productId primitive.ObjectID) error {
+	f := NewFilter().SetID(productId)
+	_, err := r.coll.DeleteOne(ctx, f)
+	if err != nil {
+		return err
+	}
+	return err
 }

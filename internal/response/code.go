@@ -6,4 +6,6 @@ const (
 	InvalidRequestJSONString
 	UnableInquiryProduct
 	UnableGetProduct
+	UnableUpdateProduct
+	UnableDelectProduct
 )

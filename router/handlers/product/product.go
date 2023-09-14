@@ -63,9 +63,21 @@ func (handler ProductHandler) UpdateProduct(ginCtx *gin.Context) {
 
 	err := handler.productService.UpdateProductServie(ginCtx, productId, product.Name, product.Price, product.CurrentStock, product.Image)
 	if err != nil {
-		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, err.Error()))
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableUpdateProduct, http.StatusBadRequest, err.Error()))
 		return
 	}
 
 	response.HandlerSuccessResponse(ginCtx, ToUpdateProductResponseDTO(&product))
+}
+
+func (handler ProductHandler) DeleteProduct(ginCtx *gin.Context) {
+	productId := ginCtx.Param("product_id")
+
+	err := handler.productService.DeleteProductService(ginCtx, productId)
+	if err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableDelectProduct, http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	response.HandlerSuccessResponse(ginCtx, "success")
 }

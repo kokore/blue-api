@@ -18,6 +18,7 @@ type Service interface {
 	CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error
 	GetProductsService(ctx context.Context) ([]productRepo.Product, error)
 	UpdateProductServie(ctx context.Context, id string, name string, price uint, currentstock uint, image string) error
+	DeleteProductService(ctx context.Context, id string) error
 }
 
 func InitProductService(appConfig *config.AppConfig, repos repository.Repositories) Service {
@@ -50,7 +51,20 @@ func (s serviceImpl) UpdateProductServie(ctx context.Context, productId string, 
 	}
 	_, errRepo := s.productRepository.FindAndUpdate(ctx, objectID, productRepo.NewUpdate().SetName(name).SetPrice(price).SetCurrentStock(currentstock).SetImage(image))
 	if errRepo != nil {
+		return errRepo
+	}
+	return nil
+}
+
+func (s serviceImpl) DeleteProductService(ctx context.Context, productId string) error {
+	objectID, err := primitive.ObjectIDFromHex(productId)
+	if err != nil {
 		return err
+	}
+
+	errRepo := s.productRepository.DeleteOneById(ctx, objectID)
+	if errRepo != nil {
+		return errRepo
 	}
 
 	return nil
