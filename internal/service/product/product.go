@@ -5,6 +5,8 @@ import (
 	"blue-api/internal/repository"
 	productRepo "blue-api/internal/repository/product"
 	"context"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type serviceImpl struct {
@@ -15,6 +17,7 @@ type serviceImpl struct {
 type Service interface {
 	CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error
 	GetProductsService(ctx context.Context) ([]productRepo.Product, error)
+	UpdateProductServie(ctx context.Context, id string, name string, price uint, currentstock uint, image string) error
 }
 
 func InitProductService(appConfig *config.AppConfig, repos repository.Repositories) Service {
@@ -38,4 +41,17 @@ func (s serviceImpl) GetProductsService(ctx context.Context) ([]productRepo.Prod
 		return nil, err
 	}
 	return products, nil
+}
+
+func (s serviceImpl) UpdateProductServie(ctx context.Context, productId string, name string, price uint, currentstock uint, image string) error {
+	objectID, err := primitive.ObjectIDFromHex(productId)
+	if err != nil {
+		return err
+	}
+	_, errRepo := s.productRepository.FindAndUpdate(ctx, objectID, productRepo.NewUpdate().SetName(name).SetPrice(price).SetCurrentStock(currentstock).SetImage(image))
+	if errRepo != nil {
+		return err
+	}
+
+	return nil
 }

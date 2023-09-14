@@ -2,8 +2,17 @@ package product
 
 import "blue-api/internal/repository/product"
 
-func ToCreatedProductResponseDTO(product *CreateProductRequest) *CreateProductResponseDTO {
-	return &CreateProductResponseDTO{
+func ToCreatedProductResponseDTO(product *ProductRequest) *ProductResponseDTO {
+	return &ProductResponseDTO{
+		Name:         product.Name,
+		Price:        product.Price,
+		CurrentStock: product.CurrentStock,
+		Image:        product.Image,
+	}
+}
+
+func ToUpdateProductResponseDTO(product *ProductRequest) *ProductResponseDTO {
+	return &ProductResponseDTO{
 		Name:         product.Name,
 		Price:        product.Price,
 		CurrentStock: product.CurrentStock,

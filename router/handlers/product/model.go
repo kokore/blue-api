@@ -7,14 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateProductRequest struct {
+type ProductRequest struct {
 	Name         string `json:"name"`
 	Price        uint   `json:"price"`
 	CurrentStock uint   `json:"currentStock"`
 	Image        string `json:"image"`
 }
 
-type CreateProductResponseDTO struct {
+type ProductResponseDTO struct {
 	Name         string `json:"name"`
 	Price        uint   `json:"price"`
 	CurrentStock uint   `json:"currentStock"`
@@ -25,7 +25,7 @@ type ProductsResponseDTO struct {
 	Products []product.Product `json:"products"`
 }
 
-func (req CreateProductRequest) Validate(ginCtx *gin.Context) error {
+func (req ProductRequest) Validate(ginCtx *gin.Context) error {
 	if req.Name == "" {
 		return errorinternal.NewError(errorinternal.ErrorCodeInvalidRequest, "name is required.")
 	}

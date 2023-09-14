@@ -36,16 +36,51 @@ func (f Filter) SetCurrentStock(currentstock uint) Filter {
 }
 
 func (f Filter) SetImage(image string) Filter {
-	f["Image"] = image
+	f["image"] = image
 	return f
 }
 
 func (f Filter) SetCreatedAt() Filter {
-	f["created_at"] = time.Now().UTC()
+	f["created_at"] = time.Now()
 	return f
 }
 
 func (f Filter) SetUpdatedAt() Filter {
-	f["updated_at"] = time.Now().UTC()
+	f["updated_at"] = time.Now()
 	return f
+}
+
+type Update bson.M
+
+func NewUpdate() Update {
+	return Update{
+		"$set": bson.M{
+			"updated_at": time.Now(),
+		},
+	}
+}
+
+func (u Update) set(field string, value any) Update {
+	u["$set"].(bson.M)[field] = value
+	return u
+}
+
+func (u Update) SetName(s string) Update {
+	u.set("name", s)
+	return u
+}
+
+func (u Update) SetPrice(s uint) Update {
+	u.set("price", s)
+	return u
+}
+
+func (u Update) SetCurrentStock(s uint) Update {
+	u.set("current_stock", s)
+	return u
+}
+
+func (u Update) SetImage(s string) Update {
+	u.set("image", s)
+	return u
 }

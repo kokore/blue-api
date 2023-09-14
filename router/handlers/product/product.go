@@ -22,7 +22,7 @@ func Init(appConfig *config.AppConfig, productService product.Service) *ProductH
 }
 
 func (handler ProductHandler) CreateProduct(ginCtx *gin.Context) {
-	var product CreateProductRequest
+	var product ProductRequest
 	if err := ginCtx.ShouldBindJSON(&product); err != nil {
 		ginCtx.JSON(http.StatusBadRequest, response.Err(response.InvalidRequestJSONString, http.StatusBadRequest, err.Error()))
 		return
@@ -36,7 +36,7 @@ func (handler ProductHandler) CreateProduct(ginCtx *gin.Context) {
 
 	errService := handler.productService.CreateProductService(ginCtx, product.Name, product.Price, product.CurrentStock, product.Image)
 	if errService != nil {
-		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, err.Error()))
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
 		return
 	}
 
@@ -50,4 +50,22 @@ func (handler ProductHandler) GetProducts(ginCtx *gin.Context) {
 		return
 	}
 	response.HandlerSuccessResponse(ginCtx, ToProductsResponseDTO(products))
+}
+
+func (handler ProductHandler) UpdateProduct(ginCtx *gin.Context) {
+	productId := ginCtx.Param("product_id")
+
+	var product ProductRequest
+	if err := ginCtx.ShouldBindJSON(&product); err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.InvalidRequestJSONString, http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	err := handler.productService.UpdateProductServie(ginCtx, productId, product.Name, product.Price, product.CurrentStock, product.Image)
+	if err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	response.HandlerSuccessResponse(ginCtx, ToUpdateProductResponseDTO(&product))
 }

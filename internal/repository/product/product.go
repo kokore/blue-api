@@ -4,8 +4,11 @@ import (
 	"blue-api/internal/database"
 	"blue-api/internal/errorinternal"
 	"context"
+	"errors"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type repoImpl struct {
@@ -15,6 +18,7 @@ type repoImpl struct {
 type Repo interface {
 	InsertOne(ctx context.Context, f Filter) error
 	Find(ctx context.Context) ([]Product, error)
+	FindAndUpdate(ctx context.Context, productId primitive.ObjectID, u Update) (*Product, error)
 }
 
 func InitUserRepository(connection database.Connection) Repo {
@@ -35,16 +39,35 @@ func (r repoImpl) Find(ctx context.Context) ([]Product, error) {
 
 	cursor, err := r.coll.Find(ctx, NewFilter())
 	if err != nil {
-		return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product")
+		return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product.")
 	}
 
 	for cursor.Next(ctx) {
 		var product Product
 		if err := cursor.Decode(&product); err != nil {
-			return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product")
+			return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product.")
 		}
 		products = append(products, product)
 	}
 
 	return products, nil
+}
+
+func (r repoImpl) FindAndUpdate(ctx context.Context, productId primitive.ObjectID, u Update) (*Product, error) {
+	f := NewFilter().SetID(productId)
+
+	result := r.coll.FindOneAndUpdate(ctx, f, u, options.FindOneAndUpdate().SetReturnDocument(options.After))
+	if result.Err() != nil {
+		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
+			return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product.")
+		}
+		return nil, result.Err()
+	}
+
+	var product Product
+	err := result.Decode(&product)
+	if err != nil {
+		return nil, err
+	}
+	return &product, nil
 }
