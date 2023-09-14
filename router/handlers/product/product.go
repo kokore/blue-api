@@ -34,11 +34,20 @@ func (handler ProductHandler) CreateProduct(ginCtx *gin.Context) {
 		return
 	}
 
-	err = handler.productService.CreateProductService(ginCtx, product.Name, product.Price, product.CurrentStock, product.Image)
-	if err != nil {
+	errService := handler.productService.CreateProductService(ginCtx, product.Name, product.Price, product.CurrentStock, product.Image)
+	if errService != nil {
 		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, err.Error()))
 		return
 	}
 
 	response.HandlerSuccessResponse(ginCtx, ToCreatedProductResponseDTO(&product))
+}
+
+func (handler ProductHandler) GetProducts(ginCtx *gin.Context) {
+	products, err := handler.productService.GetProductsService(ginCtx)
+	if err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableGetProduct, http.StatusBadRequest, err.Error()))
+		return
+	}
+	response.HandlerSuccessResponse(ginCtx, ToProductsResponseDTO(products))
 }

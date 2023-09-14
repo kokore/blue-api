@@ -14,6 +14,7 @@ type serviceImpl struct {
 
 type Service interface {
 	CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error
+	GetProductsService(ctx context.Context) ([]productRepo.Product, error)
 }
 
 func InitProductService(appConfig *config.AppConfig, repos repository.Repositories) Service {
@@ -29,4 +30,12 @@ func (s serviceImpl) CreateProductService(ctx context.Context, name string, pric
 		return err
 	}
 	return nil
+}
+
+func (s serviceImpl) GetProductsService(ctx context.Context) ([]productRepo.Product, error) {
+	products, err := s.productRepository.Find(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }

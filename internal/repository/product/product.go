@@ -14,6 +14,7 @@ type repoImpl struct {
 
 type Repo interface {
 	InsertOne(ctx context.Context, f Filter) error
+	Find(ctx context.Context) ([]Product, error)
 }
 
 func InitUserRepository(connection database.Connection) Repo {
@@ -27,4 +28,23 @@ func (r repoImpl) InsertOne(ctx context.Context, filter Filter) error {
 	}
 
 	return nil
+}
+
+func (r repoImpl) Find(ctx context.Context) ([]Product, error) {
+	var products []Product
+
+	cursor, err := r.coll.Find(ctx, NewFilter())
+	if err != nil {
+		return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product")
+	}
+
+	for cursor.Next(ctx) {
+		var product Product
+		if err := cursor.Decode(&product); err != nil {
+			return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product")
+		}
+		products = append(products, product)
+	}
+
+	return products, nil
 }

@@ -5,4 +5,5 @@ const (
 	InternalError uint64 = _internalCode + iota
 	InvalidRequestJSONString
 	UnableInquiryProduct
+	UnableGetProduct
 )

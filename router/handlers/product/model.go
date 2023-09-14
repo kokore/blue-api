@@ -2,6 +2,7 @@ package product
 
 import (
 	"blue-api/internal/errorinternal"
+	"blue-api/internal/repository/product"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,10 @@ type CreateProductResponseDTO struct {
 	Price        uint   `json:"price"`
 	CurrentStock uint   `json:"currentStock"`
 	Image        string `json:"image"`
+}
+
+type ProductsResponseDTO struct {
+	Products []product.Product `json:"products"`
 }
 
 func (req CreateProductRequest) Validate(ginCtx *gin.Context) error {
