@@ -26,5 +26,5 @@ func Init(appConfig *config.AppConfig, handlers handlers.Handlers) {
 }
 
 func registerProductRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
-	group.GET("", handlers.ProductHandler.GetProducts)
+	group.POST("", handlers.ProductHandler.CreateProduct)
 }

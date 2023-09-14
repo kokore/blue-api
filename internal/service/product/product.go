@@ -4,6 +4,7 @@ import (
 	"blue-api/internal/config"
 	"blue-api/internal/repository"
 	productRepo "blue-api/internal/repository/product"
+	"context"
 )
 
 type serviceImpl struct {
@@ -12,6 +13,7 @@ type serviceImpl struct {
 }
 
 type Service interface {
+	CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error
 }
 
 func InitProductService(appConfig *config.AppConfig, repos repository.Repositories) Service {
@@ -19,4 +21,12 @@ func InitProductService(appConfig *config.AppConfig, repos repository.Repositori
 		appConfig:         appConfig,
 		productRepository: repos.Product,
 	}
+}
+
+func (s serviceImpl) CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error {
+	err := s.productRepository.InsertOne(ctx, productRepo.NewFilter().SetName(name).SetPrice(price).SetCurrentStock(currentstock).SetImage(image).SetCreatedAt().SetUpdatedAt())
+	if err != nil {
+		return err
+	}
+	return nil
 }

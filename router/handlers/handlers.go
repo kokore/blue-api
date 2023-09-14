@@ -14,6 +14,6 @@ type Handlers struct {
 func Init(appConfig *config.AppConfig, repos repository.Repositories, services service.Services) Handlers {
 
 	return Handlers{
-		ProductHandler: product.Init(appConfig, repos),
+		ProductHandler: product.Init(appConfig, services.Product),
 	}
 }
