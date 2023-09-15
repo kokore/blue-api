@@ -18,7 +18,45 @@ func (f Filter) SetID(ids ...primitive.ObjectID) Filter {
 	return f
 }
 
-func (f Filter) SetTotal(total uint) Filter {
+func (f Filter) SetTotal(total int) Filter {
 	f["total"] = total
 	return f
+}
+
+func (f Filter) SetCoins(coins map[int]int) Filter {
+	f["coins"] = coins
+	return f
+}
+
+func (f Filter) SetBanknotes(banknotes map[int]int) Filter {
+	f["banknotes"] = banknotes
+	return f
+}
+
+type Update bson.M
+
+func NewUpdate() Update {
+	return Update{
+		"$set": bson.M{},
+	}
+}
+
+func (u Update) set(field string, value any) Update {
+	u["$set"].(bson.M)[field] = value
+	return u
+}
+
+func (u Update) SetCoins(s map[int]int) Update {
+	u.set("coins", s)
+	return u
+}
+
+func (u Update) SetBanknotes(s map[int]int) Update {
+	u.set("banknotes", s)
+	return u
+}
+
+func (u Update) SetTotal(s uint) Update {
+	u.set("total", s)
+	return u
 }

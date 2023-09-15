@@ -13,7 +13,8 @@ const (
 	ErrorCodeProductCantInsert = "PRODUCT_CANT_INSERT"
 	ErrorCodeProductNotFound   = "PRODUCT_NOT_FOUND"
 
-	ErrorCodeWalletCantInsert = "VM_CANT_INSERT_WALLET"
+	ErrorCodeWalletCantInsert = "WALLE_CANT_INSERT"
+	ErrorCodeWalletNotFound   = "WALLET_NOT_FOUND"
 )
 
 type Error struct {

@@ -22,8 +22,8 @@ func Init(appConfig *config.AppConfig, handlers handlers.Handlers) {
 	productRouters := version1.Group("/product")
 	registerProductRoutes(productRouters, handlers)
 
-	vendingMachineRouters := version1.Group("/vm")
-	registervendingMachineRoutersRoutes(vendingMachineRouters, handlers)
+	walletRouters := version1.Group("/wallet")
+	registerWalletRoutersRoutes(walletRouters, handlers)
 
 	engine.Run(port)
 }
@@ -35,6 +35,6 @@ func registerProductRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
 	group.DELETE("/:product_id", handlers.ProductHandler.DeleteProduct)
 }
 
-func registervendingMachineRoutersRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
-	group.GET("")
+func registerWalletRoutersRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
+	group.POST("", handlers.WalletHandler.CreateWallet)
 }
