@@ -25,6 +25,9 @@ func Init(appConfig *config.AppConfig, handlers handlers.Handlers) {
 	walletRouters := version1.Group("/wallet")
 	registerWalletRoutersRoutes(walletRouters, handlers)
 
+	purchaseRouters := version1.Group("/purchase")
+	registerPurchaseRoutes(purchaseRouters, handlers)
+
 	engine.Run(port)
 }
 
@@ -39,4 +42,8 @@ func registerWalletRoutersRoutes(group *gin.RouterGroup, handlers handlers.Handl
 	group.GET("", handlers.WalletHandler.GetWallet)
 	group.POST("", handlers.WalletHandler.CreateWallet)
 	group.PATCH("/:wallet_id", handlers.WalletHandler.UpdateWallet)
+}
+
+func registerPurchaseRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
+	group.POST("", handlers.PurchaseHandler.Purchase)
 }

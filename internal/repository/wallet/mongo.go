@@ -6,5 +6,5 @@ type Wallet struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	Coins     map[int]int        `json:"coins" bson:"coins"`
 	Banknotes map[int]int        `json:"banknotes" bson:"banknotes"`
-	Total     uint               `json:"total" bson:"total"`
+	Total     int                `json:"total" bson:"total"`
 }

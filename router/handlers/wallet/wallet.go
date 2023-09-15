@@ -45,7 +45,7 @@ func (handler *WalletHandler) CreateWallet(ginCtx *gin.Context) {
 
 	errService := handler.walletService.CreateWalletService(ginCtx, wallet.Coins, wallet.Banknotes)
 	if errService != nil {
-		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryWallet, http.StatusBadRequest, errService.Error()))
 		return
 	}
 
@@ -69,7 +69,7 @@ func (handler *WalletHandler) UpdateWallet(ginCtx *gin.Context) {
 
 	result, errService := handler.walletService.UpdateWalletService(ginCtx, walletId, wallet.Coins, wallet.Banknotes)
 	if errService != nil {
-		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryWallet, http.StatusBadRequest, errService.Error()))
 		return
 	}
 

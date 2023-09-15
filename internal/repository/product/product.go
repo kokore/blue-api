@@ -19,11 +19,30 @@ type Repo interface {
 	InsertOne(ctx context.Context, f Filter) error
 	Find(ctx context.Context) ([]Product, error)
 	FindAndUpdate(ctx context.Context, productId primitive.ObjectID, u Update) (*Product, error)
+	FindById(ctx context.Context, productId primitive.ObjectID) (*Product, error)
 	DeleteOneById(ctx context.Context, productId primitive.ObjectID) error
 }
 
 func InitProductRepository(connection database.Connection) Repo {
 	return &repoImpl{coll: connection.Database().Collection("product")}
+}
+
+func (r repoImpl) FindById(ctx context.Context, productId primitive.ObjectID) (*Product, error) {
+	f := NewFilter().SetID(productId)
+
+	result := r.coll.FindOne(ctx, f)
+	if result.Err() != nil {
+		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
+			return nil, errorinternal.NewError(errorinternal.ErrorCodeProductNotFound, "can't find product.")
+		}
+		return nil, result.Err()
+	}
+	var product Product
+	err := result.Decode(&product)
+	if err != nil {
+		return nil, err
+	}
+	return &product, nil
 }
 
 func (r repoImpl) InsertOne(ctx context.Context, filter Filter) error {

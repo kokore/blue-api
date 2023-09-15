@@ -8,4 +8,6 @@ const (
 	UnableGetProduct
 	UnableUpdateProduct
 	UnableDelectProduct
+	UnableInquiryWallet
+	UnableInquiryPurchase
 )
