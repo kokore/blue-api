@@ -8,17 +8,17 @@ import (
 )
 
 type ProductRequest struct {
-	Name         string `json:"name"`
-	Price        uint   `json:"price"`
-	CurrentStock uint   `json:"currentStock"`
-	Image        string `json:"image"`
+	Name     string `json:"name"`
+	Price    uint   `json:"price"`
+	Quantity uint   `json:"quantity"`
+	Image    string `json:"image"`
 }
 
 type ProductResponseDTO struct {
-	Name         string `json:"name"`
-	Price        uint   `json:"price"`
-	CurrentStock uint   `json:"currentStock"`
-	Image        string `json:"image"`
+	Name     string `json:"name"`
+	Price    uint   `json:"price"`
+	Quantity uint   `json:"quantity"`
+	Image    string `json:"image"`
 }
 
 type ProductsResponseDTO struct {
@@ -32,7 +32,7 @@ func (req ProductRequest) Validate(ginCtx *gin.Context) error {
 	if req.Price <= 0 {
 		return errorinternal.NewError(errorinternal.ErrorCodeInvalidRequest, "price more then 0.")
 	}
-	if req.CurrentStock <= 0 {
+	if req.Quantity <= 0 {
 		return errorinternal.NewError(errorinternal.ErrorCodeInvalidRequest, "current stock more then 0.")
 	}
 	if req.Image == "" {

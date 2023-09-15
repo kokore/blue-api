@@ -30,8 +30,8 @@ func (f Filter) SetPrice(price uint) Filter {
 	return f
 }
 
-func (f Filter) SetCurrentStock(currentstock uint) Filter {
-	f["current_stock"] = currentstock
+func (f Filter) SetQuantity(quantity uint) Filter {
+	f["quantity"] = quantity
 	return f
 }
 
@@ -75,8 +75,8 @@ func (u Update) SetPrice(s uint) Update {
 	return u
 }
 
-func (u Update) SetCurrentStock(s uint) Update {
-	u.set("current_stock", s)
+func (u Update) SetQuantity(s uint) Update {
+	u.set("quantity", s)
 	return u
 }
 

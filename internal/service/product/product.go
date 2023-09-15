@@ -15,9 +15,9 @@ type serviceImpl struct {
 }
 
 type Service interface {
-	CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error
+	CreateProductService(ctx context.Context, name string, price uint, quantity uint, image string) error
 	GetProductsService(ctx context.Context) ([]productRepo.Product, error)
-	UpdateProductServie(ctx context.Context, id string, name string, price uint, currentstock uint, image string) error
+	UpdateProductServie(ctx context.Context, id string, name string, price uint, quantity uint, image string) error
 	DeleteProductService(ctx context.Context, id string) error
 }
 
@@ -28,8 +28,8 @@ func InitProductService(appConfig *config.AppConfig, repos repository.Repositori
 	}
 }
 
-func (s serviceImpl) CreateProductService(ctx context.Context, name string, price uint, currentstock uint, image string) error {
-	err := s.productRepository.InsertOne(ctx, productRepo.NewFilter().SetName(name).SetPrice(price).SetCurrentStock(currentstock).SetImage(image).SetCreatedAt().SetUpdatedAt())
+func (s serviceImpl) CreateProductService(ctx context.Context, name string, price uint, quantity uint, image string) error {
+	err := s.productRepository.InsertOne(ctx, productRepo.NewFilter().SetName(name).SetPrice(price).SetQuantity(quantity).SetImage(image).SetCreatedAt().SetUpdatedAt())
 	if err != nil {
 		return err
 	}
@@ -44,12 +44,12 @@ func (s serviceImpl) GetProductsService(ctx context.Context) ([]productRepo.Prod
 	return products, nil
 }
 
-func (s serviceImpl) UpdateProductServie(ctx context.Context, productId string, name string, price uint, currentstock uint, image string) error {
+func (s serviceImpl) UpdateProductServie(ctx context.Context, productId string, name string, price uint, quantity uint, image string) error {
 	objectID, err := primitive.ObjectIDFromHex(productId)
 	if err != nil {
 		return err
 	}
-	_, errRepo := s.productRepository.FindAndUpdate(ctx, objectID, productRepo.NewUpdate().SetName(name).SetPrice(price).SetCurrentStock(currentstock).SetImage(image))
+	_, errRepo := s.productRepository.FindAndUpdate(ctx, objectID, productRepo.NewUpdate().SetName(name).SetPrice(price).SetQuantity(quantity).SetImage(image))
 	if errRepo != nil {
 		return errRepo
 	}

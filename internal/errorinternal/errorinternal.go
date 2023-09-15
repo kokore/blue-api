@@ -12,6 +12,8 @@ const (
 	// business code error
 	ErrorCodeProductCantInsert = "PRODUCT_CANT_INSERT"
 	ErrorCodeProductNotFound   = "PRODUCT_NOT_FOUND"
+
+	ErrorCodeWalletCantInsert = "VM_CANT_INSERT_WALLET"
 )
 
 type Error struct {

@@ -34,7 +34,7 @@ func (handler ProductHandler) CreateProduct(ginCtx *gin.Context) {
 		return
 	}
 
-	errService := handler.productService.CreateProductService(ginCtx, product.Name, product.Price, product.CurrentStock, product.Image)
+	errService := handler.productService.CreateProductService(ginCtx, product.Name, product.Price, product.Quantity, product.Image)
 	if errService != nil {
 		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
 		return
@@ -61,7 +61,7 @@ func (handler ProductHandler) UpdateProduct(ginCtx *gin.Context) {
 		return
 	}
 
-	err := handler.productService.UpdateProductServie(ginCtx, productId, product.Name, product.Price, product.CurrentStock, product.Image)
+	err := handler.productService.UpdateProductServie(ginCtx, productId, product.Name, product.Price, product.Quantity, product.Image)
 	if err != nil {
 		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableUpdateProduct, http.StatusBadRequest, err.Error()))
 		return

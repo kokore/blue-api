@@ -22,7 +22,7 @@ type Repo interface {
 	DeleteOneById(ctx context.Context, productId primitive.ObjectID) error
 }
 
-func InitUserRepository(connection database.Connection) Repo {
+func InitProductRepository(connection database.Connection) Repo {
 	return &repoImpl{coll: connection.Database().Collection("product")}
 }
 
