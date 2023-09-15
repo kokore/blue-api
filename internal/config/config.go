@@ -23,14 +23,6 @@ type APIConfig struct {
 	Port    string `envconfig:"PORT" default:"3000"`
 }
 
-func (a APIConfig) IsProd() bool {
-	return a.Env == "production"
-}
-
-type LogConfig struct {
-	Level string `envconfig:"LOG_CONFIG_LEVEL" default:"info"`
-}
-
 type CORSConfig struct {
 	AllowSubDomainURL string `envconfig:"CORS_ALLOW_SUB_DOMAIN_URL"`
 }

@@ -10,12 +10,8 @@ import (
 func CORS(appConfig *config.AppConfig) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		if !appConfig.APIConfig.IsProd() {
+		if strings.Contains(origin, appConfig.CORSConfig.AllowSubDomainURL) {
 			c.Header("Access-Control-Allow-Origin", origin)
-		} else {
-			if strings.Contains(origin, appConfig.CORSConfig.AllowSubDomainURL) {
-				c.Header("Access-Control-Allow-Origin", origin)
-			}
 		}
 
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")

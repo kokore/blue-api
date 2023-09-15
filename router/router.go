@@ -22,6 +22,9 @@ func Init(appConfig *config.AppConfig, handlers handlers.Handlers) {
 	productRouters := version1.Group("/product")
 	registerProductRoutes(productRouters, handlers)
 
+	vendingMachineRouters := version1.Group("/vm")
+	registervendingMachineRoutersRoutes(vendingMachineRouters, handlers)
+
 	engine.Run(port)
 }
 
@@ -30,4 +33,8 @@ func registerProductRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
 	group.POST("", handlers.ProductHandler.CreateProduct)
 	group.PATCH("/:product_id", handlers.ProductHandler.UpdateProduct)
 	group.DELETE("/:product_id", handlers.ProductHandler.DeleteProduct)
+}
+
+func registervendingMachineRoutersRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
+	group.GET("")
 }
