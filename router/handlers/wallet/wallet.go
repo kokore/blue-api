@@ -21,6 +21,15 @@ func Init(appConfig *config.AppConfig, walletService wallet.Service) *WalletHand
 	}
 }
 
+func (handler *WalletHandler) GetWallet(ginCtx *gin.Context) {
+	result, errService := handler.walletService.GetWalletService(ginCtx)
+	if errService != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
+		return
+	}
+	response.HandlerSuccessResponse(ginCtx, result)
+}
+
 func (handler *WalletHandler) CreateWallet(ginCtx *gin.Context) {
 	var wallet WalletRequest
 	if err := ginCtx.ShouldBindJSON(&wallet); err != nil {

@@ -15,6 +15,7 @@ type serviceImpl struct {
 }
 
 type Service interface {
+	GetWalletService(ctx context.Context) (*walletRepo.Wallet, error)
 	CreateWalletService(ctx context.Context, coins []int, backnotes []int) error
 	UpdateWalletService(ctx context.Context, walletId string, coins []int, backnotes []int) (*walletRepo.Wallet, error)
 }
@@ -32,6 +33,14 @@ func calculateTotal(dataMap map[int]int) int {
 		total += value * count
 	}
 	return total
+}
+
+func (s serviceImpl) GetWalletService(ctx context.Context) (*walletRepo.Wallet, error) {
+	result, err := s.walletRepository.FindOne(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (s serviceImpl) CreateWalletService(ctx context.Context, coins []int, backnotes []int) error {
