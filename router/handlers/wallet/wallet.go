@@ -42,3 +42,27 @@ func (handler *WalletHandler) CreateWallet(ginCtx *gin.Context) {
 
 	response.HandlerSuccessResponse(ginCtx, "success")
 }
+
+func (handler *WalletHandler) UpdateWallet(ginCtx *gin.Context) {
+	walletId := ginCtx.Param("wallet_id")
+
+	var wallet WalletRequest
+	if err := ginCtx.ShouldBindJSON(&wallet); err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.InvalidRequestJSONString, http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	err := wallet.Validate(ginCtx)
+	if err != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.InvalidRequestJSONString, http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	result, errService := handler.walletService.UpdateWalletService(ginCtx, walletId, wallet.Coins, wallet.Banknotes)
+	if errService != nil {
+		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryProduct, http.StatusBadRequest, errService.Error()))
+		return
+	}
+
+	response.HandlerSuccessResponse(ginCtx, result)
+}

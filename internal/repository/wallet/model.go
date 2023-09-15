@@ -56,7 +56,7 @@ func (u Update) SetBanknotes(s map[int]int) Update {
 	return u
 }
 
-func (u Update) SetTotal(s uint) Update {
+func (u Update) SetTotal(s int) Update {
 	u.set("total", s)
 	return u
 }

@@ -37,4 +37,5 @@ func registerProductRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
 
 func registerWalletRoutersRoutes(group *gin.RouterGroup, handlers handlers.Handlers) {
 	group.POST("", handlers.WalletHandler.CreateWallet)
+	group.PATCH("/:wallet_id", handlers.WalletHandler.UpdateWallet)
 }
