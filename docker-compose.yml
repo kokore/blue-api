@@ -1,0 +1,11 @@
+version: '3.6'
+
+services:
+  seek-core:
+    container_name: blue-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - 3001:3001
