@@ -18,7 +18,7 @@ type serviceImpl struct {
 }
 
 type Service interface {
-	PurchaseProcessService(ctx context.Context, productId string, quantity int) error
+	PurchaseProcessService(ctx context.Context, productId string, quantity int) ([]productRepo.Product, *walletRepo.Wallet, error)
 }
 
 func InitPurchaseService(appConfig *config.AppConfig, repos repository.Repositories) Service {
@@ -51,34 +51,34 @@ func distributeAmount(total int) (map[int]int, map[int]int) {
 	return dataCoins, dataBanknotes
 }
 
-func (s serviceImpl) PurchaseProcessService(ctx context.Context, productId string, quantity int) error {
+func (s serviceImpl) PurchaseProcessService(ctx context.Context, productId string, quantity int) ([]productRepo.Product, *walletRepo.Wallet, error) {
 	objectID, err := primitive.ObjectIDFromHex(productId)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	product, err := s.productRepository.FindById(ctx, objectID)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	if product.Quantity == 0 {
-		return errors.New("out of stock")
+		return nil, nil, errors.New("out of stock")
 	}
 
 	if product.Quantity-quantity < 0 {
-		return errors.New("out of stock")
+		return nil, nil, errors.New("out of stock")
 	}
 
 	wallet, err := s.walletRepository.FindOne(ctx)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	totalPrice := quantity * product.Price
 
 	if wallet.Total-totalPrice < 0 {
-		return errors.New("not enough money")
+		return nil, nil, errors.New("not enough money")
 	}
 
 	totalAmount := wallet.Total - totalPrice
@@ -88,11 +88,17 @@ func (s serviceImpl) PurchaseProcessService(ctx context.Context, productId strin
 
 	_, errProduct := s.productRepository.FindAndUpdate(ctx, product.ID, productRepo.NewUpdate().SetQuantity(uint(totalQuantity)))
 	if errProduct != nil {
-		return errProduct
+		return nil, nil, errProduct
 	}
-	_, errWallet := s.walletRepository.UpdateOne(ctx, wallet.ID, walletRepo.NewUpdate().SetCoins(dataCoins).SetBanknotes(dataBanknotes).SetTotal(totalAmount))
+
+	productResult, err := s.productRepository.Find(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	walletResult, errWallet := s.walletRepository.UpdateOne(ctx, wallet.ID, walletRepo.NewUpdate().SetCoins(dataCoins).SetBanknotes(dataBanknotes).SetTotal(totalAmount))
 	if errWallet != nil {
-		return errWallet
+		return nil, nil, errWallet
 	}
-	return nil
+	return productResult, walletResult, nil
 }

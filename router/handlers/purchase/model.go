@@ -2,6 +2,8 @@ package purchase
 
 import (
 	"blue-api/internal/errorinternal"
+	"blue-api/internal/repository/product"
+	"blue-api/internal/repository/wallet"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,6 +11,11 @@ import (
 type PurchaseRequest struct {
 	ProductId string `json:"productId"`
 	Quantity  int    `json:"quantity"`
+}
+
+type PurchaseResponseDTO struct {
+	Products []product.Product `json:"products"`
+	Wallet   *wallet.Wallet    `json:"wallet"`
 }
 
 func (req PurchaseRequest) Validate(ginCtx *gin.Context) error {

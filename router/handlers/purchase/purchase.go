@@ -34,10 +34,11 @@ func (handler *PurchaseHandler) Purchase(ginCtx *gin.Context) {
 		return
 	}
 
-	errService := handler.purchaseService.PurchaseProcessService(ginCtx, purchase.ProductId, purchase.Quantity)
+	products, wallet, errService := handler.purchaseService.PurchaseProcessService(ginCtx, purchase.ProductId, purchase.Quantity)
 	if errService != nil {
 		ginCtx.JSON(http.StatusBadRequest, response.Err(response.UnableInquiryPurchase, http.StatusBadRequest, errService.Error()))
 		return
 	}
-	response.HandlerSuccessResponse(ginCtx, "success")
+
+	response.HandlerSuccessResponse(ginCtx, ToPurchaseResponseDTO(products, wallet))
 }
