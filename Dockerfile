@@ -1,19 +1,13 @@
 FROM golang:1.20
 
-RUN apt update
+WORKDIR /app
 
-ENV ROOT_PATH=/var/www/blueapi
-
-RUN mkdir -p $ROOT_PATH
-
-WORKDIR $ROOT_PATH
-
-COPY . .
+COPY . ./
 
 RUN go mod tidy
 
 RUN go build main.go
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD go run ./main.go

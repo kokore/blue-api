@@ -1,11 +1,18 @@
-version: '3.6'
-
+version: "3.9"
 services:
-  seek-core:
-    container_name: blue-api
+  go-api:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
-    ports: 
+    ports:
       - 3001:3001
+    depends_on:
+      - mongo_db
+
+  mongo_db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
