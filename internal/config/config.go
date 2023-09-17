@@ -20,7 +20,7 @@ type AppConfig struct {
 type APIConfig struct {
 	Env     string `envconfig:"ENV" default:"local"`
 	BaseURL string `envconfig:"BASE_URL"`
-	Port    string `envconfig:"PORT" default:"3000"`
+	Port    string `envconfig:"PORT" default:"3001"`
 }
 
 type CORSConfig struct {

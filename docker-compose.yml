@@ -1,18 +1,28 @@
-version: "3.9"
+version: '3.6'
+
 services:
-  go-api:
+  blue-api:
+    container_name: blue-api
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
+    restart: always
+    environment:
+      ENV: local
+      BASE_URL: http://localhost:3001
+      PORT: 3001
+      DB_NAME: blue-api-local
+      DB_USERNAME:
+      DB_PASSWORD:
+    ports: 
       - 3001:3001
-    depends_on:
-      - mongo_db
-
-  mongo_db:
-    image: mongo:latest
+  database:
+    image: mongo
     ports:
       - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=
       - MONGO_INITDB_ROOT_PASSWORD=
+      - MONGO_INITDB_DATABASE=blue-api-local
+      - MONGO_INITDB_USERNAME=
+      - MONGO_INITDB_PASSWORD=
