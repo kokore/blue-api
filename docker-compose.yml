@@ -1,21 +1,21 @@
 version: '3.6'
 
 services:
-  blue-api:
-    container_name: blue-api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      ENV: local
-      BASE_URL: http://localhost:3001
-      PORT: 3001
-      DB_NAME: blue-api-local
-      DB_USERNAME:
-      DB_PASSWORD:
-    ports: 
-      - 3001:3001
+  # blue-api:
+  #   container_name: blue-api
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   environment:
+  #     ENV: local
+  #     BASE_URL: http://localhost:3001
+  #     PORT: 3001
+  #     DB_NAME: blue-api-local
+  #     DB_USERNAME:
+  #     DB_PASSWORD:
+  #   ports: 
+  #     - 3001:3001
   database:
     image: mongo
     ports:
